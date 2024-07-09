@@ -1,0 +1,226 @@
+_____________________________________________________________
+
+       Dictionary report
+
+       Project             Etapa 1
+_____________________________________________________________
+
+
+
+                        schema Modelagem Conceitual/2
+
+   Agência espacial / agEspacial[S]
+      @@Organização responsável pelas missões espaciais. Gerencia todo aspecto da missão de exploração: escolhe o ponto de lançamento, a carga, os tripulantes e o destino a ser explorado. Possui um ou mais pontos de lançamento.
+     name / name: varchar (50)[S]
+         @@Nome da agência espacial.
+      local / local: varchar (50)[S]
+         @@Localização da sede da agência espacial.
+      foundt / foundt: date (10)[S]
+         @@Data de fundação da agência espacial.
+      id': name[S]
+         @@É único.
+      role: Contém [1-N] in Contém
+      role: Gerencia [0-N] in Gerenciamento
+   Astronauta / astro[S]
+      @@O explorador dessa nova era de descobrimentos. O astronauta pode trabalhar em grupos de um ou mais astronautas. Sua função é explorar corpos celestes. Eles são designados em missões associados a uma carga (Ex: foguete, nave espacial, rover etc.) e uma agência espacial. Dentre as várias características que podemos retirar, podemos extrair o seu nome, nacionalidade e data de nascimento para o nosso modelo. 
+      name / name: varchar (50)[S]
+         @@Nome completo do astronauta.
+      nationality / nationality: varchar (50)[S]
+         @@Nacionalidade(país de origem) do astronauta.
+      birthdt / birthdt: date (10)[S]
+         @@Data de nascimento do astronauta.
+      role: Mora [0-1] in Moradia
+      role: Reside [0-N] in Residência
+      role: Tripula [0-N] in Tripulado
+   Buraco Negro / bNegro[S]
+      @@Uma estrela que colapsou em sua própria massa. Frequentemente possui um disco de massa em sua orbita, tornando a sua exploração uma das mais arriscadas. É tão massivo que chega a curvar o caminho da luz, sendo possível ver a parte do disco atrás do corpo. Em um certo ponto de sua orbita, nada que ultrapasse o seu raio de Schwartzchild poderá escapar. Este raio não é a sua superfície, tecnicamente um buraco negro não possui uma superfície, mas apenas um ponto em seu centro onde toda a massa é concentrada.
+      is-a Corpo Celeste
+      swcRadius / swcRadius: float (10)[S]
+         @@Raio de Schwartzschild em múltiplos de raio solar.
+      acRadius / acRadius: float (10)[S]
+         @@Raio do disco de acreção em múltiplos de raio solar.
+      role: Faz parte [1-1] in Galáxia-BNegro
+   Carga / carga[S]
+      @@Entidade associativa representado uma "carga".
+      role: Carrega [0-1] in Carga-Rover
+      role: Carrega [0-1] in Carga-NaveE
+      role: É propulsionada [1-1] in Propulsor
+      role: É veículo [0-N] in Veículo
+   Corpo Celeste / cCeleste[S]
+      @@Corpo celeste é um termo genérico usado em astronomia para designar as matérias existentes no espaço sideral. Desse modo, ele pode ser aplicado para referir-se a estrelas, planetas, asteroides, cometas, e satélites naturais. Embora todos os corpos descobertos tenham um código, alguns recebem um nome para facilitar a comunicação.
+      sub-type  (P) Satélite, Planeta, Estrela, Galáxia, Buraco Negro
+     cod / cod: varchar (99)[S]
+         @@Código único de cada astro. Normalmente definido com base da sua localização no céu.
+      name / name[0-1]: varchar (50)[S]
+         @@Nome informal do corpo.
+      mass / mass: float (10)[S]
+         @@Massa do corpo em múltiplos de massa solar.
+      radius / radius: float (10)[S]
+         @@Raio em múltiplos de raio solar.
+      id': cod[S]
+         @@É único.
+      role: É alvo [0-N] in Destino
+      role: É morado [0-N] in Moradia
+      role: É orbitado [0-N] in Orbita Estação
+   Estação Espacial / estEsp[S]
+      @@Um satélite artificial construído para residir humanos. Pode ser usado para realizar experimentos em situações de zero gravidade, ou treinar astronautas para participarem em missões além do planeta terra. Em casos de uma missão ser tripulada ter como destino um corpo celeste em que não é possível pousar, uma estação espacial pode ser utilizada para realizar análises longas.
+      name / name: varchar (50)[S]
+         @@Nome da estação espacial.
+      maxcap / maxcap: num (10)[S]
+         @@Capacidade máxima de astronautas.
+      orbrad / orbrad: float (10)[S]
+         @@Raio orbital em Km.
+      role: Orbita [0-1] in Orbita Estação
+      role: É residido [1-N] in Residência
+   Estrela / estrela[S]
+      @@Um corpo celeste que produz luz própria. Orbita uma galáxia e pode ser orbitada por um ou mais planetas. Pode ser classificada dependendo de sua temperatura, raio e massa.
+      is-a Corpo Celeste
+      class / class: varchar (50)[S]
+         @@Classe da estrela.
+      temp / temp: num (10)[S]
+         @@Temperatura efetiva da estrela (em Kelvin).
+      role: Faz parte [1-1] in Galáxia-Estrela
+      role: É orbitado [0-N] in Estrela-Planeta
+   Foguete / foguete[S]
+      @@A função principal do foguete é fornecer a energia cinética suficiente para retirar cargas do planeta Terra para o espaço. No escopo de exploração espacial, exercem a função de levar uma nave espacial com os astronautas e(ou) um rover para os corpos celestes. Partem de um ponto de lançamento.
+     cods / serial: varchar (50)[S]
+         @@Modelo do foguete.
+      fabdt / fabdt: date (10)[S]
+         @@Data de fabricação.
+      specimp / specimp: num (10)[S]
+         @@Impulso específico do motor de propulsão em segundos.
+      fueltype / fueltype: varchar (30)[S]
+         @@Tipo de combustível.
+      mass / mass: num (10)[S]
+         @@Massa do motor do foguete em kg.
+      id': cods[S]
+         @@É único.
+      role: É propulsão [0-1] in Propulsor
+   Galáxia / galaxia[S]
+      @@Um corpo celeste definido como um conjunto de corpos celestes unidos pela atração gravitacional dos mesmos. Ao contrário do conhecimento popular, nem todas as galáxias possuem um buraco negro supermassivo no seu centro.
+      is-a Corpo Celeste
+      category / category: varchar (30)[S]
+         @@Categoria da galáxia.
+      numStars / numStars: num (10)[S]
+         @@Número estimado de estrelas em bilhões.
+      role: Contém [0-N] in Galáxia-BNegro
+      role: Contém [0-N] in Galáxia-Estrela
+   Missão / miss[S]
+      @@Todo lançamento de foguete é uma missão. Seja tripulada ou não, a complexidade da operação requer que as informações do evento sejam bem documentadas na base de dados. É necessário que o ponto de origem, os tripulantes, a carga, o destino e a agência que gerencia a missão sejam bem definidos para que não haja problemas de agendamento.
+      name / name: varchar (50)[S]
+         @@Nome da missão espacial.
+     launchdt / launchdt: date (10)[S]
+         @@Data de lançamento.
+      id': launchdt[S]
+         @@É único.
+      role: Destino [1-N] in Destino
+      role: É gerenciado [1-1] in Gerenciamento
+      role: Partiu [1-1] in Origem
+      role: É tripulada [0-N] in Tripulado
+      role: Transporta [0-N] in Veículo
+   Nave Espacial / nEspacial[S]
+      @@Veículo de transporte para astronautas, pelo menos um astronauta. Além disso, as naves espaciais transportam cargas pequenas como suprimentos e ferramentas de exploração para os astronautas. Podem ser transportados entre outras coisas por um foguete.
+     cods / serial: varchar (50)[S]
+         @@Modelo da nave espacial.
+      fabdt / fabdt: date (10)[S]
+         @@Data de fabricação.
+      range / range: num (10)[S]
+         @@Alcance da nave espacial em km.
+      fueltype / fueltype: varchar (30)[S]
+         @@Tipo de combustível.
+      mass / mass: num (10)[S]
+         @@Massa da nave espacial sem carga em toneladas.
+      id': cods[S]
+         @@É único.
+      role: É carregado [0-1] in Carga-NaveE
+   Planeta / planeta[S]
+      @@Um planeta orbita apenas uma estrela e pode ser considerado habitável ou não. As condições para decidir esse atributo vão além da complexidade do trabalho.
+      is-a Corpo Celeste
+      habitable / habitable: boolean (1)[S]
+         @@Descreve se o planeta possui atmosfera habitável ou não.
+      orbitalRadius / orbitalRadiu: float (10)[S]
+         @@Raio em que o planeta orbita a estrela em unidades astronômicas (distância entre a terra e o sol).
+      role: Orbita [1-1] in Estrela-Planeta
+      role: É orbitado [0-N] in Planeta-Satel
+   Ponto de Lançamento / ptLanc[S]
+      @@O ponto de partida de todas as missões. Um ponto de lançamento pode estar associado a uma ou mais agências espaciais.
+      name / name: varchar (50)[S]
+         @@Nome do ponto de lançamento.
+     coord / coord: coord[ST]
+         @@Coordenadas do ponto de lançamento.
+      id': coord[S]
+         @@É único.
+      role: É contido [1-N] in Contém
+      role: É origem [0-N] in Origem
+   Rover / rover[S]
+      @@Um astromóvel autônomo. Responsável pela exploração da superfície de um planeta, coletando informações sobre as rochas e o terreno. Pode ser transportado por um foguete.
+     cods / serial: varchar (50)[S]
+         @@Modelo do rover.
+      fabdt / fabdt: date (10)[S]
+         @@Data de fabricação.
+      funct / funct: varchar (50)[S]
+         @@Descrição das funções do rover(sensores e instrumentos).
+      mass / mass: num (10)[S]
+         @@Massa do rover em kg.
+      id': cods[S]
+         @@É único.
+      role: É carregado [0-1] in Carga-Rover
+   Satélite / satelite[S]
+      @@Um satélite natural que orbita necessariamente um planeta.
+      is-a Corpo Celeste
+      habitable / habitable: boolean (1)[S]
+         @@Descreve se o satélite possui atmosfera habitável ou não.
+      orbitalRadius / orbitalRadiu: float (10)[S]
+         @@Raio em que o satélite orbita a estrela em unidades astronômicas (distância entre a terra e o sol).
+      role: Orbita [1-1] in Planeta-Satel
+
+   Carga-NaveE / equipNave (
+      É carregado [0-1] : Nave Espacial
+      Carrega [0-1] : Carga )
+   Carga-Rover / carrRover (
+      É carregado [0-1] : Rover
+      Carrega [0-1] : Carga )
+   Contém / contLan (
+      Contém [1-N] : Agência espacial
+      É contido [1-N] : Ponto de Lançamento )
+   Destino / dest (
+      É alvo [0-N] : Corpo Celeste
+      Destino [1-N] : Missão
+      arrivaldt / arrivaldt[0-1]: date (10)[S] )
+         @@Data de chegada.
+   Estrela-Planeta / orbEstrel (
+      Orbita [1-1] : Planeta
+      É orbitado [0-N] : Estrela )
+   Galáxia-BNegro / gal-bNegro (
+      Faz parte [1-1] : Buraco Negro
+      Contém [0-N] : Galáxia )
+   Galáxia-Estrela / gal-estr (
+      Faz parte [1-1] : Estrela
+      Contém [0-N] : Galáxia )
+   Gerenciamento / assoc (
+      É gerenciado [1-1] : Missão
+      Gerencia [0-N] : Agência espacial )
+   Moradia / moraCorpoC (
+      Mora [0-1] : Astronauta
+      É morado [0-N] : Corpo Celeste )
+   Orbita Estação / orbEsta (
+      Orbita [0-1] : Estação Espacial
+      É orbitado [0-N] : Corpo Celeste )
+   Origem / origem (
+      Partiu [1-1] : Missão
+      É origem [0-N] : Ponto de Lançamento )
+   Planeta-Satel / orbPlanet (
+      Orbita [1-1] : Satélite
+      É orbitado [0-N] : Planeta )
+   Propulsor / propuls (
+      É propulsionada [1-1] : Carga
+      É propulsão [0-1] : Foguete )
+   Residência / residEst (
+      Reside [0-N] : Astronauta
+      É residido [1-N] : Estação Espacial )
+   Tripulado / tripu (
+      É tripulada [0-N] : Missão
+      Tripula [0-N] : Astronauta )
+   Veículo / veic (
+      Transporta [0-N] : Missão
+      É veículo [0-N] : Carga )
